@@ -3,7 +3,7 @@
     <h1>home</h1>
     <div v-if="$apollo.loading">Loading... please wait!</div>
     <ul
-      v-for="post in getPosts"
+      v-for="post in posts"
       :key="post._id"
     >
       <li>
@@ -23,29 +23,42 @@ import { gql } from "apollo-boost";
 
 export default {
   name: "home",
-  data() {
-    return {
-      posts: []
-    };
+  // data() {
+  //   return {
+  //     posts: []
+  //   };
+  // },
+  // apollo: {
+  //   getPosts: {
+  //     query: gql`
+  //       query {
+  //         getPosts {
+  //           _id
+  //           title
+  //           description
+  //           imageUrl
+  //           likes
+  //         }
+  //       }
+  //     `,
+  //     result({ data, loading }) {
+  //       if (!loading) {
+  //         this.posts = data.getPosts;
+  //       }
+  //     }
+  //   }
+  // }
+  created() {
+    this.handleGetPosts();
   },
-  apollo: {
-    getPosts: {
-      query: gql`
-        query {
-          getPosts {
-            _id
-            title
-            description
-            imageUrl
-            likes
-          }
-        }
-      `,
-      result({ data, loading }) {
-        if (!loading) {
-          this.posts = data.getPosts;
-        }
-      }
+  computed: {
+    posts() {
+      return this.$store.getters.posts;
+    }
+  },
+  methods: {
+    handleGetPosts() {
+      return this.$store.dispatch("getPosts");
     }
   }
 };
